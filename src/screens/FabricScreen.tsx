@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,14 +8,14 @@ import {
   Easing,
   Alert,
 } from 'react-native';
-import {Theme} from '../theme';
-import {CustomButton} from '../components/CustomButton';
+import { Theme } from '../theme';
+import { CustomButton } from '../components/CustomButton';
 
 interface FabricScreenProps {
   goBack: () => void;
 }
 
-export const FabricScreen: React.FC<FabricScreenProps> = ({goBack}) => {
+export const FabricScreen: React.FC<FabricScreenProps> = ({ goBack }) => {
   const [isBlocked, setBlocked] = useState(false);
   const spinValue = useRef(new Animated.Value(0)).current;
 
@@ -38,7 +38,7 @@ export const FabricScreen: React.FC<FabricScreenProps> = ({goBack}) => {
 
   const triggerHeavyComputation = () => {
     setBlocked(true);
-    
+
     // We use setTimeout to allow the UI to show the 'Blocked' state before actually locking up
     setTimeout(() => {
       const startTime = Date.now();
@@ -55,7 +55,7 @@ export const FabricScreen: React.FC<FabricScreenProps> = ({goBack}) => {
   };
 
   // 生成假数据供 ScrollView 滑动
-  const dummyList = Array.from({length: 30}, (_, i) => `Native 列表项 ${i + 1}`);
+  const dummyList = Array.from({ length: 30 }, (_, i) => `Native 列表项 ${i + 1}`);
 
   return (
     <View style={styles.container}>
@@ -82,7 +82,7 @@ export const FabricScreen: React.FC<FabricScreenProps> = ({goBack}) => {
               <Animated.View
                 style={[
                   styles.box,
-                  {transform: [{rotate: spin}]},
+                  { transform: [{ rotate: spin }] },
                 ]}
               />
             </View>
@@ -90,18 +90,18 @@ export const FabricScreen: React.FC<FabricScreenProps> = ({goBack}) => {
           </View>
 
           <View style={styles.rightPanel}>
-             {/* The JS Heavy Operation */}
-             <Text style={[styles.panelTitle, {color: Theme.colors.error}]}>JS Thread</Text>
-             <CustomButton
-                title={isBlocked ? '🥵 线程锁死中...' : '☢️ 阻塞 JS 3 秒'}
-                variant={isBlocked ? 'outline' : 'primary'}
-                onPress={triggerHeavyComputation}
-                disabled={isBlocked}
-                style={{backgroundColor: isBlocked ? 'transparent' : Theme.colors.error}}
-             />
-             <Text style={styles.statusTextError}>
-               {isBlocked ? 'JS 帧率为 0 !' : 'JS 空闲运转中'}
-             </Text>
+            {/* The JS Heavy Operation */}
+            <Text style={[styles.panelTitle, { color: Theme.colors.error }]}>JS Thread</Text>
+            <CustomButton
+              title={isBlocked ? '🥵 线程锁死中...' : '☢️ 阻塞 JS 3 秒'}
+              variant={isBlocked ? 'outline' : 'primary'}
+              onPress={triggerHeavyComputation}
+              disabled={isBlocked}
+              style={{ backgroundColor: isBlocked ? 'transparent' : Theme.colors.error }}
+            />
+            <Text style={styles.statusTextError}>
+              {isBlocked ? 'JS 帧率为 0 !' : 'JS 空闲运转中'}
+            </Text>
           </View>
         </View>
 

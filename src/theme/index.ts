@@ -9,6 +9,7 @@ export const Theme = {
     border: '#334155', // Slate 700
     error: '#ef4444', // Red 500
     success: '#22c55e', // Green 500
+    warning: '#f59e0b', // Amber 500
   },
   spacing: {
     xs: 4,
