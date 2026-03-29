@@ -99,7 +99,18 @@ const LikeButton = ({ title }) => {
   );
 };
 
-export default LikeButton;
+// 👇 下面是外部父组件如何调用 LikeButton 的演示
+const App = () => {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center' }}>
+      {/* 多次调用同一个组件，每次传入不同的 Props (基因)！ */}
+      <LikeButton title="React Native 深度指南" />
+      <LikeButton title="如何学好 JavaScript" />
+    </View>
+  );
+};
+
+export default App;
 ```
 
 ---
