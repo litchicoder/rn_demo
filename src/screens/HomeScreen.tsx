@@ -18,7 +18,7 @@ import {ShowcaseCard} from '../components/ShowcaseCard';
 import {CustomInput} from '../components/CustomInput';
 
 interface HomeScreenProps {
-  navigate: (screen: 'BridgeSpy' | 'VDom' | 'Yoga' | 'Fabric') => void;
+  navigate: (screen: 'VDom' | 'Yoga' | 'Fabric') => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({navigate}) => {
@@ -42,14 +42,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({navigate}) => {
           title="⚡️ 底层探索 (Architecture Demos)"
           subtitle="在真实设备上观察这些“看不见”的运行机制">
           <View style={styles.demoGrid}>
-            <TouchableOpacity
-              style={styles.demoBlock}
-              onPress={() => navigate('BridgeSpy')}>
-              <Text style={styles.demoIcon}>🕵️‍♂️</Text>
-              <Text style={styles.demoTitle}>大桥间谍</Text>
-              <Text style={styles.demoDesc}>监听 JS <-> Native 这条旧水管里的 JSON 流量</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity
               style={[styles.demoBlock, {backgroundColor: Theme.colors.success + '1A'}]}
               onPress={() => navigate('VDom')}>

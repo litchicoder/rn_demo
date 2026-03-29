@@ -14,29 +14,7 @@
 
 ---
 
-## 演示一：大桥间谍 (MessageQueue Spy)
-**展示目标**：让观众亲眼看到 JS 和 Native 之间传输的 JSON 数据包，理解所谓的“Bridge 流量”。
-
-### 操作步骤
-1. 在应用的入口文件（通常是 `index.js` 或 `App.tsx`）顶部加入以下调试代码：
-   ```javascript
-   // 使用 __DEV__ 避免影响 Release 包
-   if (__DEV__) {
-     const MessageQueue = require('react-native/Libraries/BatchedBridge/MessageQueue');
-     // 开启对所有“跨桥”通信的实时监听
-     MessageQueue.spy(true);
-   }
-   ```
-2. 运行应用，并打开控制台 (Remote Debugger 或 Flipper Logs)。
-3. **现场观察**：
-   - 快速滚动列表或点击按钮。
-   - 观察控制台喷涌而出的日志。
-   - **指点细节**：指着日志中的 `module` (调用的原生模块), `method` (方法名), `args` (参数)。这就是**老架构“独木桥”上的“车辆”**。
-   - **高阶知识延伸**：可以顺带提一句：“这种密集的异步通信正是老架构产生通讯积压的罪魁祸首，而目前 React Native 正在全面上线的 **JSI (新架构)** 就是为了抛弃这座桥，实现 JS 与 Native 的直接同步调用。”
-
----
-
-## 演示二：虚拟 DOM 的“找茬”游戏 (Highlight Updates)
+## 演示一：虚拟 DOM 的“找茬”游戏 (Highlight Updates)
 **展示目标**：展示 React 的局部更新能力，证明并没有全量刷新 UI。
 
 ### 操作步骤
@@ -49,7 +27,7 @@
 
 ---
 
-## 演示三：Yoga 的布局魔法 (Inspector)
+## 演示二：Yoga 的布局魔法 (Inspector)
 **展示目标**：展示样式坐标转换。你可以写 Flexbox，但 iOS/Android 获取的是具体的 X, Y 坐标。
 
 ### 操作步骤
@@ -62,7 +40,7 @@
 
 ---
 
-## 演示四：流畅度大考验 (Perf Monitor)
+## 演示三：流畅度大考验 (Perf Monitor)
 **展示目标**：展示 JS 线程与 UI 线程的分离，理解异步渲染的优势。
 
 ### 操作步骤
