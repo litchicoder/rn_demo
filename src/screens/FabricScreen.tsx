@@ -17,7 +17,12 @@ interface FabricScreenProps {
 
 export const FabricScreen: React.FC<FabricScreenProps> = ({ goBack }) => {
   const [isBlocked, setBlocked] = useState(false);
+  const [tapCount, setTapCount] = useState(0);
   const spinValue = useRef(new Animated.Value(0)).current;
+  const renderCount = useRef(0);
+  
+  // 每渲染一次加1，用于观察自动批处理 (Batching)
+  renderCount.current += 1;
 
   useEffect(() => {
     // 开启原生驱动的旋转动画不受 JS 线程阻塞影响
@@ -50,7 +55,7 @@ export const FabricScreen: React.FC<FabricScreenProps> = ({ goBack }) => {
       }
       console.log('--- JS Thread Lock Released ---');
       setBlocked(false);
-      Alert.alert('解脱了', 'JS 线程阻塞结束！刚刚这段时间你还能滑动下面的列表吗？');
+      Alert.alert('解脱了', `JS 阻塞结束！\n积压的跨端事件现已被 React 18 批处理并利用 Fabric (JSI) 一次性同步更新。`);
     }, 100);
   };
 
@@ -61,16 +66,16 @@ export const FabricScreen: React.FC<FabricScreenProps> = ({ goBack }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>🔥 流畅度考验</Text>
-        <Text style={styles.subtitle}>JS 卡死，原生到底死不死？</Text>
+        <Text style={styles.subtitle}>Fabric 引擎 vs 老 Bridge 原理对比</Text>
       </View>
 
       <View style={styles.content}>
         <View style={styles.card}>
           <Text style={styles.description}>
-            1. 请打开开发者菜单中的 **Perf Monitor** (查看 JS 和 UI 帧率)。{'\n'}
-            2. 观察下方旋转的方块与滚动的列表（都跑在原生的 UI 线程）。{'\n'}
-            3. 点击红色危险按钮：**JS FPS 会瞬间归 0**！但你会震撼地发现，方块仍在旋转，列表依然可以丝滑滚动！{'\n'}
-            但是，如果此时用户交互需要触发 JS 更新页面（比如点赞功能），系统就会卡死。这就是 **Fabric** 架构想要通过同步调用来优化的“跳帧黑盒”。
+            1. 打开 **Perf Monitor** (看 JS/UI 帧率)。{'\n'}
+            2. 点击<Text style={{fontWeight: 'bold', color: Theme.colors.error}}>红色锁死按钮</Text>，JS 帧率将瞬间归 0。{'\n'}
+            3. **视觉震撼**：此时滑动列表、看旋转方块，依然 60 帧丝滑！(原生线程接管){'\n'}
+            4. **灵魂拷问**：在 JS 锁死这 3 秒内，疯狂点击下方的交互测试按钮。观察解锁后，Fabric 是如何通过自动批处理(Batching)将原本疯狂跳帧的 UI 一步到位只渲染一次的！
           </Text>
         </View>
 
@@ -103,6 +108,26 @@ export const FabricScreen: React.FC<FabricScreenProps> = ({ goBack }) => {
               {isBlocked ? 'JS 帧率为 0 !' : 'JS 空闲运转中'}
             </Text>
           </View>
+        </View>
+
+        <View style={styles.interactionArea}>
+          <Text style={styles.interactionTitle}>⚡️ 交互积压测试区 (Fabric 同步渲染)</Text>
+          <View style={styles.interactionRow}>
+            <View style={{ flex: 1 }}>
+              <CustomButton
+                title={`点我 +1 (当前: ${tapCount})`}
+                onPress={() => setTapCount(c => c + 1)}
+                variant="primary"
+              />
+            </View>
+            <View style={styles.interactionStats}>
+              <Text style={styles.statsLabel}>UI 渲染次数:</Text>
+              <Text style={styles.statsValue}>{renderCount.current}</Text>
+            </View>
+          </View>
+          <Text style={styles.interactionDesc}>
+             {isBlocked ? '⚠️ JS 已锁死！现在疯狂点击，把事件积压在底层！' : '请先点击红色按钮锁死 JS，然后再来尝试疯狂点击测试积压'}
+          </Text>
         </View>
 
         <ScrollView style={styles.listArea}>
@@ -234,5 +259,49 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: Theme.colors.border,
     backgroundColor: Theme.colors.background,
+  },
+  interactionArea: {
+    backgroundColor: Theme.colors.surface,
+    padding: 16,
+    borderRadius: Theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: Theme.colors.primary,
+    marginBottom: 20,
+  },
+  interactionTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: Theme.colors.primary,
+    marginBottom: 12,
+  },
+  interactionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  interactionStats: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Theme.colors.background,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Theme.colors.border,
+  },
+  statsLabel: {
+    fontSize: 12,
+    color: Theme.colors.textMuted,
+  },
+  statsValue: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: Theme.colors.text,
+  },
+  interactionDesc: {
+    fontSize: 12,
+    color: Theme.colors.textMuted,
+    marginTop: 12,
+    fontStyle: 'italic',
   },
 });
